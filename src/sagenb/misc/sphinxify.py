@@ -147,7 +147,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u""
-copyright = u'2005--2009, The Sage Development Team'
+copyright = u'2005--2009, The FEMhub Development Team'
 
 #version = '3.1.2'
 # The full version, including alpha/beta/rc tags.
@@ -287,7 +287,7 @@ latex_preamble = '\usepackage{amsmath}\n\usepackage{amsfonts}\n'
 #latex_use_modindex = True
 
 #####################################################
-# add LaTeX macros for Sage
+# add LaTeX macros for FEMhub
 try:
     from sage.misc.latex_macros import sage_latex_macros
 except ImportError:
