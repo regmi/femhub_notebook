@@ -11,7 +11,7 @@
 """
 Notebook control object
 
-This is used for configuring and starting the Sage notebook server.
+This is used for configuring and starting the FEMhub notebook server.
 """
 
 import time, os, shutil, signal, tempfile
@@ -22,13 +22,13 @@ import run_notebook
 
 class NotebookObject:
     r"""
-Start the Sage Notebook server. More documentation is available in the
-Sage installation guide, in the "Running the Sage Notebook Securely"
+Start the FEMhub Notebook server. More documentation is available in the
+FEMhub installation guide, in the "Running the FEMhub Notebook Securely"
 chapter, and at http://wiki.sagemath.org/StartingTheNotebook.
 
     INPUT:
     
-        - ``directory``     -- directory that contains the Sage notebook files;
+        - ``directory``     -- directory that contains the FEMhub notebook files;
           the default is .sage/sage_notebook, in your home directory.
         - ``port``          -- (default: 8000), port to serve the notebook on.
         - ``address``       -- (default: 'localhost'), address of network
@@ -37,7 +37,7 @@ chapter, and at http://wiki.sagemath.org/StartingTheNotebook.
           the first one doesn't work (*not* implemented).
         - ``secure``        -- (default: False) if True use https so all
           communication, e.g., logins and passwords, between
-          web browsers and the Sage notebook is encrypted
+          web browsers and the FEMhub notebook is encrypted
           via GNU TLS.  *Highly recommended!*
         - ``require_login`` -- (default: True) if True login is required else web
           user is automatically logged in as user admin.
@@ -57,7 +57,6 @@ chapter, and at http://wiki.sagemath.org/StartingTheNotebook.
               nb.set_accounts(True)
               nb.add_user("username", "password", "email@place", "user")
               nb.save()
-              
         - ``open_viewer``   -- (default: True) whether to pop up a web browser.
           You can override the default browser by setting the
           SAGE_BROWSER environment variable, e.g., by putting
@@ -65,25 +64,25 @@ chapter, and at http://wiki.sagemath.org/StartingTheNotebook.
           in the file .bashrc in your home directory.
         - ``timeout``       -- (default: 0) seconds until idle worksheet
           sessions automatically timeout, i.e., the
-          corresponding Sage session terminates. 0 means
+          corresponding FEMhub session terminates. 0 means
           `never timeout'. If your server is running out
           of memory, setting a timeout can be useful as
           this will free the memory used by idle sessions.
         - ``server_pool``   -- (default: None) list; this option specifies that
           worksheet processes run as a separate user (chosen
-          from the list in the server_pool -- see below). 
-                      
+          from the list in the server_pool -- see below).
+
 
     NOTE: If you have problems with the server certificate hostname not
     matching, do \code{notebook.setup()}.
-    
+
     EXAMPLES:
 
-    1. I just want to run the Sage notebook.  Type::
+    1. I just want to run the FEMhub notebook.  Type::
 
            notebook()
 
-    2. I want to run the Sage notebook server on a remote machine and be the
+    2. I want to run the FEMhub notebook server on a remote machine and be the
        only person allowed to log in.  Type::
 
            notebook(address='', secure=True)
@@ -94,19 +93,19 @@ chapter, and at http://wiki.sagemath.org/StartingTheNotebook.
 
     3. I just want to run the server locally on my laptop and do not want to
        be bothered with having to log in::
- 
+
            notebook(require_login=False)
 
        Use this ONLY if you are *absolutely certain* that you are the only
        user logged into the laptop and do not have to worry about somebody
-       else using the Sage notebook on localhost and deleting your files.
+       else using the FEMhub notebook on localhost and deleting your files.
 
-    4. I want to create a Sage notebook server that is open to anybody in
-       the world to create new accounts. To run the Sage notebook publicly
+    4. I want to create a FEMhub notebook server that is open to anybody in
+       the world to create new accounts. To run the FEMhub notebook publicly
        (1) at a minimum run it from a chroot jail or inside a virtual
-       machine (see wiki.sagemath.org/StartingTheNotebook and the Sage
+       machine (see wiki.sagemath.org/StartingTheNotebook and the FEMhub
        install guide) and (2) use a command like::
-    
+
            notebook(address='', server_pool=['sage1@localhost'],
            ulimit='-v 500000', accounts=True)
 
@@ -126,7 +125,7 @@ chapter, and at http://wiki.sagemath.org/StartingTheNotebook.
     INPUT:  (more advanced)
 
     More details about using these options can be found at:
-    http://wiki.sagemath.org/StartingTheNotebook and in the Sage install
+    http://wiki.sagemath.org/StartingTheNotebook and in the FEMhub install
     guide.
 
     NOTE: The values of these two properties default to what they were last
@@ -152,7 +151,7 @@ chapter, and at http://wiki.sagemath.org/StartingTheNotebook.
           documentation. Common options include:
 
               - ``-t``   The maximum amount of cpu time in seconds.
-                NOTE: For Sage, -t is the wall time, not cpu time.
+                NOTE: For FEMhub, -t is the wall time, not cpu time.
                 
               - ``-u``   The maximum number of processes available to a single user.
               

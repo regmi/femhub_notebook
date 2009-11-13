@@ -315,9 +315,9 @@ except AttributeError:
 
 try:
     import sage.version
-    SAGE_VERSION=sage.version.version
+    SAGE_VERSION="4.2-3" #sage.version.version
 except ImportError:
-    SAGE_VERSION=""
+    SAGE_VERSION="4.2-3"
 
 try:
     from sage.plot.colors import Color
@@ -382,7 +382,7 @@ except ImportError:
     @stub
     def cython(*args, **kwds):
         # TODO
-        raise NotImplementedError, "Curently %cython mode requires Sage." 
+        raise NotImplementedError, "Curently %cython mode requires FEMhub." 
 
 
 #############################################################
