@@ -24,7 +24,7 @@ does after restarting the server.
 [ ] make communication between twist.py and notebook_lib.js use JSON
 instead of encode_list and response_text.split.
 
-[ ] Get peter.jipsen's "canvas3d_lib.js + Pre3d does shaded surfaces" into Sage
+[ ] Get peter.jipsen's "canvas3d_lib.js + Pre3d does shaded surfaces" into FEMhub
 
 [ ] codenode's engine/interpreter.py has a function with this comment:
         """input_string could contain multiple lines, multiple commands, or
@@ -45,7 +45,7 @@ print a*b
 -2
 35
 }}}
-which is more natural, since it mimics the command line.   We should change Sage
+which is more natural, since it mimics the command line.   We should change FEMhub
 so it does the same.  I think this would simply involving changing the
 interfaces/* stuff a little.  This is probably easy, and is now high priority since
 it is something that has bugged me for a long time. 
@@ -167,6 +167,8 @@ parts (e.e., images, DATA, etc.) with checkboxes.
 
 [ ] code to benchmark notebook externally
 [ ] implement %cython mode outside femhub (and as a full mode?)
+    to have different sage commadn on remote machine
+[ ] implement %cython mode outside sage (and as a full mode?)
 [ ] fix doctests
 [ ] worksheet processes use fork
 [ ] worksheet process use multiprocessing 
@@ -184,7 +186,6 @@ parts (e.e., images, DATA, etc.) with checkboxes.
 [ ] @interact: make it so docstring of function is somehow nicely typeset and accessible
 
 [ ] @interact's that can be included with FEMhub
-
 [ ] "browse your computer" field of upload is not editable.  fix that.
 
 [ ] improve tracebacks of % modes, e.g., %python then 1/0 is ugly.
@@ -194,13 +195,14 @@ parts (e.e., images, DATA, etc.) with checkboxes.
 what has happened recently. login IPs, type and time. you can also
 invalidate all other sessions on other PCs where cookies are stored.
 [ ] somehow connect http://qwebirc.org with FEMhub?
+[ ] somehow connect http://qwebirc.org with FEMhub?
 [ ] statistics of notebooks, e.g., how many per user, names of all users, how many users?
 [ ] If a worksheet is still named "untitled" then perhaps the system
 should not just blindly save it with that pseudo-title when you click
 'Save' but rather automatically pop-up the rename box and invite the
 user to change it before saving.
 
-[ ] somehow connect http://qwebirc.org with Sage?
+[ ] somehow connect http://qwebirc.org with FEMhub?
 
 [ ] statistics of notebooks, e.g., how many per user, names of all
 users, how many users?
@@ -421,7 +423,7 @@ the vertical real-estate is premium.  Ideally, when you "Toggle" the
 header, there would be only one line at the top of the notebook before
 the cells start.
 
-At the very least, maybe putting the version number right under "Sage
+At the very least, maybe putting the version number right under "FEMhub
 Notebook" would justify the extra vertical space.  I think it would be
 better if the icon were only one line high, and the toggle collapsed
 everything to one line."

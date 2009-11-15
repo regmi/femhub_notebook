@@ -22,7 +22,7 @@ def all_files(dir, lstrip):
 
 code = setup(name = 'sagenb',
       version     = '0.4.6',    # the spkg-dist script assumes single quotes here
-      description = 'The Sage Notebook',
+      description = 'The FEMhub Notebook',
       license     = 'GNU Public License (GPL) v2+',
       author      = 'William Stein et al.',
       author_email= 'http://groups.google.com/group/sage-support',
