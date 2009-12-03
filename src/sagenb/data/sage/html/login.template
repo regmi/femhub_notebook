@@ -50,8 +50,9 @@ elementary methods of numerical analysis.
 <br><br>
 <b>Step 3:</b> Click on "Edit a Copy" in the upper left corner and
         wait for the browser response.  Scroll down below
-        the first input window and click "Evaluate". This will
-        load the program. Then there are two input windows
+        the first input window and click "Evaluate" (the "Evaluate" link 
+        will appear once you click into the text input window). 
+        This will load the program. Then there are two input windows
         with two different ways to plot a Taylor polynomial
         that are self-explanatory.
 <br><br>
