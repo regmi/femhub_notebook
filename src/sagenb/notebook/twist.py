@@ -37,6 +37,7 @@ import os, shutil, time
 import bz2
 from cgi import escape
 
+from twisted.python import log
 from twisted.web2 import server, http, resource, channel
 from twisted.web2 import static, http_headers, responsecode
 from twisted.web2.filter import gzip
@@ -51,13 +52,17 @@ from sagenb.notebook.template import template
 HISTORY_MAX_OUTPUT = 92*5
 HISTORY_NCOLS = 90
 
-from sagenb.misc.misc import SAGE_DOC, walltime, tmp_filename, tmp_dir, DATA, SAGE_VERSION
+from sagenb.misc.misc import (SAGE_DOC, DATA, SAGE_VERSION, walltime,
+                              tmp_filename, tmp_dir, is_package_installed,
+                              jsmath_macros)
 
 css_path             = os.path.join(DATA, "sage", "css")
 image_path           = os.path.join(DATA, "sage", "images")
 javascript_path      = os.path.join(DATA)
 sage_javascript_path = os.path.join(DATA, 'sage', 'js')
 java_path            = os.path.join(DATA)
+
+jsmath_image_fonts = is_package_installed("jsmath-image-fonts")
 
 # the list of users waiting to register
 waiting = {}
@@ -127,7 +132,7 @@ def gzip_handler(request):
 ############################
 # An error message
 ############################
-def message(msg, cont=None):
+def message(msg, cont='/'):
     template_dict = {'msg': msg, 'cont': cont}
     return template(os.path.join('html', 'error_message.html'),
                     **template_dict)
@@ -401,6 +406,8 @@ class UploadWorksheet(resource.PostableResource):
         self.username = username
 
     def render(self, ctx):
+        backlinks = """ Return to <a href="/upload" title="Upload a worksheet"><strong>Upload File</strong></a>."""
+
         url = ctx.args['urlField'][0].strip()
         dir = ''  # we will delete the directory below if it is used
         if url != '':
@@ -410,6 +417,8 @@ class UploadWorksheet(resource.PostableResource):
             # uploading a file from the user's computer
             dir = tmp_dir()
             filename = ctx.files['fileField'][0][0]
+            if filename == '':
+                return HTMLResponse(stream=message("Please specify a worksheet to load.%s" % backlinks))
             # Make tmp file in Sage temp directory
             filename = os.path.join(dir, filename)
             f = file(filename,'wb')
@@ -419,8 +428,8 @@ class UploadWorksheet(resource.PostableResource):
             f.close()
 
 
-        #We make a callback so that we can download a file remotely
-        #while allowing the server to still serve requests.
+        # We make a callback so that we can download a file remotely
+        # while allowing the server to still serve requests.
         def callback(result):
 
             if ctx.args.has_key('nameField'):
@@ -446,9 +455,9 @@ class UploadWorksheet(resource.PostableResource):
                     else:
                         W = notebook.import_worksheet(filename, self.username)
 
-                except IOError, msg:
-                    print msg
-                    raise ValueError, "Unfortunately, there was an error uploading the worksheet.  It could be an old unsupported format or worse.  If you desperately need its contents contact the Google group sage-support and post a link to your worksheet.  Alternatively, an sws file is just a bzip2'd tarball; take a look inside!"
+                except Exception, msg:
+                    s = 'There was an error uploading the worksheet.  It could be an old unsupported format or worse.  If you desperately need its contents contact the <a href="http://groups.google.com/group/sage-support">sage-support group</a> and post a link to your worksheet.  Alternatively, an sws file is just a bzip2 tarball; take a look inside!%s' % backlinks
+                    return HTMLResponse(stream=message(s,'/'))
                 finally:
                     # Clean up the temporarily uploaded filename.
                     os.unlink(filename)
@@ -457,7 +466,7 @@ class UploadWorksheet(resource.PostableResource):
                         shutil.rmtree(dir)
 
             except ValueError, msg:
-                s = "Error uploading worksheet '%s'."%msg
+                s = "Error uploading worksheet '%s'.%s" % (msg, backlinks)
                 return HTMLResponse(stream = message(s, '/'))
 
             # If the user requested in the form a specific title for
@@ -468,18 +477,22 @@ class UploadWorksheet(resource.PostableResource):
             return http.RedirectResponse('/home/'+W.filename())
 
         if url != '':
-            #We use the downloadPage function which returns a
-            #deferred which we are allowed to return to the server.
-            #The server waits until the download is finished and then runs
-            #the callback function specified.
+            # We use the downloadPage function which returns a
+            # deferred which we are allowed to return to the server.
+            # The server waits until the download is finished and then runs
+            # the callback function specified.
             from twisted.web.client import downloadPage
             d = downloadPage(url, filename)
             d.addCallback(callback)
+            def errback(result):
+                msg = "There was an error uploading '%s' (please recheck the URL).%s" % (url, backlinks)
+                return HTMLResponse(stream=message(msg,'/'))
+            d.addErrback(errback)
             return d
         else:
-            #If we already have the file, then we
-            #can just return the result of callback which will
-            #give us the HTMLResponse.
+            # If we already have the file, then we
+            # can just return the result of callback which will
+            # give us the HTMLResponse.
             return callback(None)
 
 
@@ -546,52 +559,69 @@ class Worksheet_upload_data(WorksheetResource, resource.Resource):
 
 class Worksheet_do_upload_data(WorksheetResource, resource.PostableResource):
     def render(self, ctx):
-        name = ''
-        if ctx.args.has_key('newField'):
-            newfield = ctx.args['newField'][0].strip()
-        else:
-            newfield = None
+        # Backlinks.
+        worksheet_url = '/home/' + self.worksheet.filename()
+        upload_url = worksheet_url + '/upload_data'
+        backlinks = """ Return to <a href="%s" title="Upload or create a data file in a wide range of formats"><strong>Upload or Create Data File</strong></a> or <a href="%s" title="Interactively use the worksheet"><strong>%s</strong></a>.""" % (upload_url, worksheet_url, self.worksheet.name())
 
-        if ctx.args.has_key('nameField'):
-            name = ctx.args['nameField'][0].strip()
+        # Check for the form's fields.  They need not be filled.
+        if not ctx.files.has_key('fileField'):
+            return HTMLResponse(stream=message('Error uploading file (missing fileField file).%s' % backlinks, worksheet_url))
 
-        url = ctx.args['urlField'][0].strip()
+        text_fields = ['urlField', 'newField', 'nameField']
+        for field in text_fields:
+            if not ctx.args.has_key(field):
+                return HTMLResponse(stream=message('Error uploading file (missing %s arg).%s' % (field, backlinks), worksheet_url))
 
-        if not name:
-            name = ctx.files['fileField'][0][0]
+        # Get the fields.
+        newfield = ctx.args.get('newField', [''])[0].strip()
+        name = ctx.args.get('nameField', [''])[0].strip()
+        url = ctx.args.get('urlField', [''])[0].strip()
 
-        if not name:
-            name = newfield
-
+        name = name or ctx.files['fileField'][0][0] or newfield
         if url and not name:
-            name = os.path.split(url)[-1]
+            name = url.split('/')[-1]
 
+        # The next line makes sure that name is plain filename, so
+        # that dest below is a file in the data directory.  See trac
+        # 7495 for why this is critically important.
+        name = os.path.split(name)[-1]
+
+        if not name:
+            return HTMLResponse(stream=message('Error uploading file (missing filename).%s' % backlinks, worksheet_url))
         dest = os.path.join(self.worksheet.data_directory(), name)
         if os.path.exists(dest):
+            if not os.path.isfile(dest):
+                return HTMLResponse(stream=message('Suspicious filename "%s" encountered uploading file.%s' % (name, backlinks), worksheet_url))
             os.unlink(dest)
-        response = http.RedirectResponse('/home/'+self.worksheet.filename() + '/datafile?name=%s'%name)
+            
+        response = http.RedirectResponse(worksheet_url + '/datafile?name=%s' % name)
 
         if url != '':
-            #Here we use twisted's downloadPage function which
-            #returns a deferred object.  We return the deferred to the server,
-            #and it will wait until the download has finished while
-            #still serving other requests.  At the end of the deferred
-            #callback chain should be the response that we wanted to return.
+            # Here we use twisted's downloadPage function which
+            # returns a deferred object.  We return the deferred to
+            # the server, and it will wait until the download has
+            # finished while still serving other requests.  At the end
+            # of the deferred callback chain should be the response
+            # that we wanted to return.
             from twisted.web.client import downloadPage
 
-            #The callback just returns the response
+            # The callback just returns the response
             def callback(result):
                 return response
+            def errback(result):
+                msg = "There was an error uploading '%s' (please recheck the URL).%s" % (url, backlinks)
+                return HTMLResponse(stream=message(msg, worksheet_url))
 
             d = downloadPage(url, dest)
             d.addCallback(callback)
+            d.addErrback(errback)
             return d
         elif newfield:
-            if os.path.exists(dest): os.unlink(dest)
-            open(dest,'w').close()
+            open(dest, 'w').close()
             return response
         else:
-            f = file(dest,'wb')
+            f = file(dest, 'wb')
             f.write(ctx.files['fileField'][0][2].read())
             f.close()
             return response
@@ -915,37 +945,49 @@ class Worksheet_revisions(WorksheetResource, resource.PostableResource):
 class SettingsPage(resource.PostableResource):
     def __init__(self, username):
         self.username = username
+        self.nb_user = notebook.user(username)
 
     def render(self, request):
         error = None
         redirect_to_home = None
         redirect_to_logout  = None
-        if 'autosave' in request.args:
-            notebook.user(self.username)['autosave_interval'] = int(request.args['autosave'][0]) * 60
-            redirect_to_home = True
+        nu = self.nb_user
 
-        if 'Newpass' in request.args or 'RetypePass' in request.args:
-            if not 'Oldpass' in request.args:
+        autosave = int(request.args.get('autosave', [0])[0]) * 60
+        if autosave:
+            nu['autosave_interval'] = autosave
+            redirect_to_home = True            
+
+        old = request.args.get('Oldpass', [None])[0]
+        new = request.args.get('Newpass', [None])[0]
+        two = request.args.get('RetypePass', [None])[0]
+        if new or two:
+            if not old:
                 error = 'Old password not given'
-            elif not notebook.user(self.username).password_is(request.args['Oldpass'][0]):
+            elif not nu.password_is(old):
                 error = 'Incorrect password given'
-            elif not 'Newpass' in request.args:
+            elif not new:
                 error = 'New password not given'
-            elif not 'RetypePass' in request.args:
+            elif not two:
                 error = 'Please type in new password again.'
-            elif request.args['Newpass'][0] != request.args['RetypePass'][0]:
+            elif new != two:
                 error = 'The passwords you entered do not match.'
 
-            if not error: #webbrowser may auto fill in "old password" even though the user may not want to change her password
-                notebook.change_password(self.username, request.args['Newpass'][0])
+            if not error:
+                # The browser may auto-fill in "old password," even
+                # though the user may not want to change her password.
+                notebook.change_password(self.username, new)
                 redirect_to_logout = True
+
         if notebook.conf()['email']:
-            if 'Newemail' in request.args:
-                notebook.user(self.username).set_email(request.args['Newemail'][0])
+            newemail = request.args.get('Newemail', [None])[0]
+            if newemail:
+                nu.set_email(newemail)
+#                nu.set_email_confirmation(False)
                 redirect_to_home = True
 
         if error:
-            return HTMLResponse(stream=message(error, '/settings'))
+            return HTMLResponse(stream = message(error, '/settings'))
 
         if redirect_to_logout:
             return http.RedirectResponse('/logout')
@@ -953,15 +995,23 @@ class SettingsPage(resource.PostableResource):
         if redirect_to_home:
             return http.RedirectResponse('/home/%s' % self.username)
 
-        template_dict = {}
-        template_dict['username'] = self.username
-        template_dict['autosave_intervals'] = ((i, ' selected') if notebook.user(self.username)['autosave_interval']/60 == i else (i, '') for i in range(1, 10, 2))
-        template_dict['email'] = notebook.conf()['email']
-        if template_dict['email']:
-            template_dict['email_address'] = 'None' if not notebook.user(self.username)._User__email else notebook.user(self.username)._User__email
-            template_dict['email_confirmed'] = 'Not confirmed' if not notebook.user(self.username).is_email_confirmed() else 'Confirmed'
-        template_dict['admin'] = user_type(self.username) == 'admin'
-        return HTMLResponse(stream=template(os.path.join('html', 'account_settings.html'), **template_dict))
+        td = {}
+        td['username'] = self.username
+
+        td['autosave_intervals'] = ((i, ' selected') if nu['autosave_interval']/60 == i else (i, '') for i in range(1, 10, 2))
+
+        td['email'] = notebook.conf()['email']
+        if td['email']:
+            td['email_address'] = nu.get_email() or 'None'
+            if nu.is_email_confirmed():
+                td['email_confirmed'] = 'Confirmed'
+            else:
+                td['email_confirmed'] = 'Not confirmed'
+
+        td['admin'] = nu.is_admin()
+
+        s = template(os.path.join('html', 'account_settings.html'), **td)
+        return HTMLResponse(stream = s)
 
 
 class NotebookSettingsPage(resource.PostableResource):
@@ -1583,8 +1633,11 @@ class EmptyTrash(resource.Resource):
             []
             sage: n.delete()
         """
-        notebook.empty_trash(self.username)
-        return HTMLResponse(stream = message("Trash emptied."))
+        if ctx.headers.hasHeader('referer'):
+            notebook.empty_trash(self.username)
+            return http.RedirectResponse(ctx.headers.getHeader('referer'))
+        else:
+            return http.StatusResponse(403, 'No referer found. Forbidden.')
 
 class SendWorksheetToFolder(resource.PostableResource):
     def __init__(self, username):
@@ -1766,6 +1819,16 @@ setattr(CSS, 'child_reset.css', Reset_css())
 # Javascript resources
 ############################
 
+class JSMath_js(resource.Resource):
+    def render(self, ctx):
+        gzip_handler(ctx)
+
+        s = template(os.path.join('js', 'jsmath.js'),
+                     jsmath_macros = jsmath_macros,
+                     jsmath_image_fonts = jsmath_image_fonts)
+        
+        return http.Response(stream=s)
+
 class Main_js(resource.Resource):
     def render(self, ctx):
         gzip_handler(ctx)
@@ -1798,6 +1861,7 @@ class SageJavascript(resource.Resource):
         return static.File(path)
 
 setattr(SageJavascript, 'child_main.js', Main_js())
+setattr(SageJavascript, 'child_jsmath.js', JSMath_js())
 
 class Javascript(resource.Resource):
     addSlash = True
@@ -2137,6 +2201,8 @@ class RegistrationPage(resource.PostableResource):
                             **template_dict)
             return HTMLResponse(stream = form)
 
+        log.msg("Created new user '%s'"%username)
+
         # POST-VALIDATION hooks.  All required fields should be valid.
         if notebook.conf()['email']:
             from sagenb.notebook.smtpsend import send_mail
@@ -2152,31 +2218,20 @@ class RegistrationPage(resource.PostableResource):
             # Send a confirmation message to the user.
             try:
                 send_mail(fromaddr, email_address,
-                          "FEMhub Notebook Registration", body)
+                          "Sage Notebook Registration", body)
                 waiting[key] = username
             except ValueError:
-                template_dict['username_taken'] = True
-                errors_found()
-                return HTMLResponse(stream=template('registration.html', **template_dict))
+                pass
 
-            if notebook.conf()['email']:
-                destaddr = filled_in['email']
-                from sagenb.notebook.smtpsend import send_mail
-                from sagenb.notebook.register import make_key, build_msg
-                # TODO: make this come from the server settings
-                key = make_key()
-                listenaddr = notebook.address
-                port = notebook.port
-                fromaddr = 'no-reply@%s' % listenaddr
-                body = build_msg(key, filled_in['username'], listenaddr, port,
-                                 notebook.secure)
+        # Go to the login page.
+        template_dict = {'accounts': notebook.get_accounts(),
+                         'default_user': notebook.default_user(),
+                         'welcome': username,
+                         'recovery': notebook.conf()['email'],
+                         'sage_version': SAGE_VERSION}
 
-                # Send a confirmation message to the user.
-                try:
-                    send_mail(fromaddr, destaddr, "FEMhub Notebook Registration",body)
-                    waiting[key] = filled_in['username']
-                except ValueError:
-                    pass
+        form = template(os.path.join('html', 'login.html'), **template_dict)
+        return HTMLResponse(stream = form)
 
 
 class ForgotPassPage(resource.Resource):

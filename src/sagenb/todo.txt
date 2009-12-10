@@ -109,13 +109,9 @@ message.  This would limit (though not prevent) damages.
 
 [ ] Jonathan Gutow -- redo how jmol works
 
-[ ] Get peter.jipsen's "canvas3d_lib.js + Pre3d does shaded surfaces" into Sage
-
 [ ] notebook docs -- something in "doc/en/sagenb"
 
-[ ] implement base_url
-
-[ ] get rid of list of 'Sage Users' when publishing worksheets --
+[ ] maybe get rid of list of 'Sage Users' when publishing worksheets --
 that's not appropriate given how sage has grown.
 
 [ ] notebook(default_mode="python") way to make the notebook default
@@ -161,25 +157,14 @@ would be good enough to do the switch."
 parts (e.e., images, DATA, etc.) with checkboxes.
 
 [ ] change api for notebook command; in particular enable capability
-<<<<<<< HEAD:src/sagenb/todo.txt
-    to have different sage commadn on remote machine
-=======
     to have different sage command on remote machine
 
->>>>>>> e98b9cd... updated to hg 182:54f41fd841a3:src/sagenb/todo.txt
 [ ] worksheet processes using named pipes
 
 [ ] code to benchmark notebook externally
-<<<<<<< HEAD:src/sagenb/todo.txt
-[ ] implement %cython mode outside sage (and as a full mode?)
-[ ] fix doctests
-[ ] worksheet processes use fork
-[ ] worksheet process use multiprocessing 
-=======
 
 [ ] implement %cython mode outside sage (and as a full mode?)
 
->>>>>>> e98b9cd... updated to hg 182:54f41fd841a3:src/sagenb/todo.txt
 [ ] worksheet processes using server on remote machine
 
 [ ] worksheet processes using fork
@@ -189,13 +174,9 @@ parts (e.e., images, DATA, etc.) with checkboxes.
 [ ] genuine infinite undo implemented not using stupid snapshots but a revision log
 
 [ ] @interact: make it so docstring of function is somehow nicely typeset and accessible
-<<<<<<< HEAD:src/sagenb/todo.txt
-[ ] @interact's that can be included with sage
-=======
 
 [ ] @interact's that can be included with sage
 
->>>>>>> e98b9cd... updated to hg 182:54f41fd841a3:src/sagenb/todo.txt
 [ ] "browse your computer" field of upload is not editable.  fix that.
 
 [ ] improve tracebacks of % modes, e.g., %python then 1/0 is ugly.
@@ -204,21 +185,12 @@ parts (e.e., images, DATA, etc.) with checkboxes.
 "last account activity" line and if you click on details, you can see
 what has happened recently. login IPs, type and time. you can also
 invalidate all other sessions on other PCs where cookies are stored.
-<<<<<<< HEAD:src/sagenb/todo.txt
-[ ] somehow connect http://qwebirc.org with Sage?
-[ ] statistics of notebooks, e.g., how many per user, names of all users, how many users?
-[ ] If a worksheet is still named "untitled" then perhaps the system
-should not just blindly save it with that pseudo-title when you click
-'Save' but rather automatically pop-up the rename box and invite the
-user to change it before saving.
-=======
 
 [ ] somehow connect http://qwebirc.org with Sage?
 
 [ ] statistics of notebooks, e.g., how many per user, names of all
 users, how many users?
 
->>>>>>> e98b9cd... updated to hg 182:54f41fd841a3:src/sagenb/todo.txt
 [ ] a way to put a code block between two text blocks that lie one
 right after the other.
 

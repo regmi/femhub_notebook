@@ -34,10 +34,10 @@ Python modules::
     '.../sageinspect.py'
 
     sage: print sage_getdoc(sagenb.misc.sageinspect).lstrip()[:40]
-    Inspect Python, FEMhub, and Cython objects
+    Inspect Python, Sage, and Cython objects
 
     sage: sage_getsource(sagenb.misc.sageinspect).lstrip()[5:-1]
-    'Inspect Python, FEMhub, and Cython objects...'
+    'Inspect Python, Sage, and Cython objects...'
 
 Test introspection of classes defined in Python and Cython files:
 
