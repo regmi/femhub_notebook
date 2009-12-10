@@ -4,47 +4,57 @@
 
 {% block body %}
         <span class="banner">
-        <a class="banner" href="http://nb.femhub.org/"><img align="top" src="/images/femhub.png" alt="FEMhub"> The FEMhub Notebook</a>: Welcome!
+        <a class="banner" href="http://nb.femhub.org/"><img align="top" src="/images/femhub.png" alt="FEMhub"> The Online Numerical Methods Laboratory</a>: Welcome!
         </span>
 
 <br><br>
 <table>
 <tr><td bgcolor="#f8f4f4" width=50%>
 {% if welcome %}
-<h2>Congratulations {{ welcome }}! You can now sign into the FEMhub Notebook.</h2><br>
+<h2>Congratulations {{ welcome }}! You can now sign into the FEMhub Online Numerical Methods Laboratory.</h2><br>
 {% endif %}
 
 <span class="addtext">
 
-<b>The FEMhub Notebook</b><br>
-With the FEMhub Notebook
-anyone can create, collaborate on, and publish interactive
-worksheets. In a worksheet, one can write code using FEMhub, Python,
-and other software included in FEMhub.
+<b>The FEMhub Online Numerical Methods Laboratory</b><br>
+The goal of the FEMhub online lab is to make scientific computing accessible to anyone. 
+No need to be a rocket scientist. No need to own a strong computer or buy expensive 
+software either. Everything takes place inside the web browser window. Yes, the same 
+browser that you use for emails or to watch YouTube movies. And yes, you can use 
+your favorite iPhone or iPod. The online lab is backed up with substantial computing 
+power of the <a href="http://unr.edu/">University of Nevada, Reno,</a> that the University gives you free of charge.
+<br><br>
+
+In the online lab you can edit and modify many different numerical methods, use them 
+for your own projects, and share with others if you like. To facilitate your endeavors, 
+FEMhub provides an easy access to many useful software libraries. To access the FEMhub 
+community with any questions or ideas, use the <a href="http://groups.google.com/group/femhub/">FEMhub mailing list</a>
+(femhub@googlegroups.com). 
+We'd like to hear from you!
+<br><br>
+
+Currently, the FEMhub online lab uses some functionality of the <a href="http://sagemath.org/">Sage</a> web notebook. 
 <br><br>
 
 <b>The FEMhub Project</b><br>
 <a href="http://femhub.org/">FEMhub</a> is an open-source distribution of
 finite element codes with a unified Python interface, enhanced with an
 interactive online finite element laboratory.
-The distribution is developed by an open source community around the hp-FEM
-group at the University of Nevada, Reno and available under the GPL license
+The distribution is developed by an open source community around the <a href="http://hpfem.org/">hp-FEM
+group</a> at the University of Nevada, Reno and available under the GPL license
 (Version 2, 1991 or later).
 <br><br>
 
-The FEMhub web notebook is based on the <a href="http://sagemath.org/">Sage</a> notebook.
-<br><br>
-
 <hr>
-<b>How to get started with the FEMhub web notebook <a href="http://nb.femhub.org/">http://nb.femhub.org/</a></b><br>
+<b>How to get started with the FEMhub online lab <a href="http://nb.femhub.org/">http://nb.femhub.org/</a></b><br>
 The best way is to try out simple worksheets that explain
 elementary methods of numerical analysis.
 <br><br>
-<b>Step 1: </b><a href="http://nb.femhub.org/register">Sign up for a new FEMhub Notebook account</a>
+<b>Step 1: </b><a href="http://nb.femhub.org/register">Sign up for a new FEMhub online lab account</a>
         This is automatic and fast. Report any problems to
         femhub@googlegroups.com.
 <br><br>
-<b>Step 2:</b> Log into the web notebook. Click on "published
+<b>Step 2:</b> Log into the online lab. Click on "published
         worksheets". Then click on any link starting with
         "Num Methods", the simplest one being "Num
         Methods: Taylor Polynomial".
@@ -70,7 +80,7 @@ elementary methods of numerical analysis.
 </span>
 </td>
 <td bgcolor="#efefff" align=center>
-<span class="addtext">Sign into the FEMhub Notebook v{{ sage_version }}<br><br>
+<span class="addtext">Sign into the FEMhub Online Numerical Methods Laboratory v{{ sage_version }}<br><br>
 <form method="POST" action="/login">
 <table>
 <tr><td align=right>Username:</td><td><input type="text" name="email" value="{{ default_user }}" size="15"></td></tr>
@@ -86,7 +96,7 @@ elementary methods of numerical analysis.
 </table>
 <br><br><br>
 {% if accounts %}
-<a href='/register'><b>Sign up for a new FEMhub Notebook account</b></a>
+<a href='/register'><b>Sign up for a new FEMhub online lab account</b></a>
 {% endif %}
 <br><br><br>
 <a href='/pub'><b>Browse published FEMhub worksheets<br>(no login required)</b></a><br /><br/><br/>

@@ -18,7 +18,7 @@ AUTHORS:
        refactoring of javascript code; systematic keyboard controls
     -- Dorian Raymer
     -- Yi Qiang
-    -- Bobby Moretti  
+    -- Bobby Moretti
 
 The FEMhub graphical user interface is unusual in that it operates via
 your web browser.  It provides you with FEMhub worksheets that you can
@@ -26,22 +26,22 @@ edit and evaluate, which contain scalable typeset mathematics and
 beautiful antialised images.  To try it out immediately, do this:
 
     femhub: notebook(open_viewer=True)          # not tested
-    the FEMhub notebook starts...
+    the FEMhub online lab starts...
 
 \subsection{Supported Browsers}
 
-The FEMhub notebook should fully work with Firefox (and Mozilla).  It
+The FEMhub online lab should fully work with Firefox (and Mozilla).  It
 may work to some extent with Safari and Opera.  Internet Explorer is
 not supported.
 
 \subsection{Tutorial}
-Here are some things to try in the the notebook to get a feeling
+Here are some things to try in the the online lab to get a feeling
 for it.
- 
+
 Type "2+2" in the blank box and press "shift-enter".
 The line below"2+2" will turn a different color for a moment while a FEMhub kernel
 fires up and computes the answer.
- 
+
 Your cursor should now be in the next box down.   Type \code{a = 2\^1000}
 and press return, then "a" alone on the second line, then shift-return.
 You'll see a big number.   Also, "a" will appear in the variable
@@ -49,10 +49,10 @@ browser in the left of the screen.    Next, click just to the
 left of the big number in the blue-ish area.  The number will shrink
 a little and change to occupy only one line.  You can see the whole
 number using your browser's horizontal scroll bar.  Click again and
-the number vanishes, to be replaced by a horizontal bar.  Click on the 
+the number vanishes, to be replaced by a horizontal bar.  Click on the
 bar and the number is back.  If you click "Hide Output" in the upper
 right, all output disappears.
- 
+
 Next try graphics!  Type "show(plot(sin,0,10))" into an empty
 box and hit shift-enter.   You'll get a graph of sin.   Try another
 function, e.g.,
@@ -60,16 +60,16 @@ function, e.g.,
    show(plot(lambda x: sin(x)^2 - cos(2*x)^3, -5,5))
 \end{verbatim}
 Click on the left side of the figure (twice) to make it disappear.
- 
-One important feature of the FEMhub notebook is that you can
+
+One important feature of the FEMhub online lab is that you can
 "queue up" a bunch of calculations in a row, *while* still editing the
-notebook!  As an example, consider computing factorials, which takes a
+online lab!  As an example, consider computing factorials, which takes a
 while (but not forever).  First, enter the following in a blank box and
 press"shift-return":
 \begin{verbatim}
 def f(n):
     return len(str(factorial(10^n)))
-\end{verbatim}         
+\end{verbatim}
 This defines a function that takes a while to compute.   For example,
 time the execution of "f(5)", by typing (in a new box), "time f(5)".
 It should take a few seconds.   Next try
@@ -86,17 +86,17 @@ example, if you hit the "Evaluate" link in the upper right, the
 whole worksheet is queued up for computation.  Try it.   When the
 computation gets stuck on "f(6)", hit the interrupt button (or press escape)
 and the queued up calculations are cancelled.
- 
+
 Click "Hide Output" in the upper right.   You'll see just your
 input and some little boxes; clicking on the boxes reveals output.
- 
+
 You can also embed nicely typeset math.  Try this:
 \begin{verbatim}
 f = maxima('sin(x^2)')
 g = f.integrate('x')
 view(g)
 \end{verbatim}
- 
+
 If this silently fails, type "view(g, debug=True)" instead.
 You need latex and the "convert" and "gs" commands, (use
 an "apt-get install imagemagick gs").  Anyways, you get
@@ -146,13 +146,13 @@ Moreover, if you put \code{\%jsmath} at the beginning of an input
 cell, the whole cell will be typeset using jsmath.  Also, you can type
 \code{jsmath(obj)} to typeset a given object obj using jsmath.
 
- 
+
 \subsubsection{Adding and Removing Cells}
 To add a new cell, click on a little black line that appears when you
 hover between any two cells, or above the top one.  To delete a cell
 delete all its contents, then press ctrl-backspace one more time.  The cell
 vanishes forever.
- 
+
 You can also move back and forth between cells using the up and down
 arrow.  In particular, when you are at the top of a cell and press
 the up arrow the cursor jumps to the previous cell.
@@ -174,7 +174,7 @@ yet provides an incredible amount of functionality, especially because
 that popup window can be easily searched (at least in Firefox), pasted
 from, etc., and refreshed (use F5 or Ctrl-R).
 
- 
+
 \subsubsection{Introspection}
 To find all completions for an identifier you are typing press
 the tab key.  This should work exactly like IPython, and even
@@ -184,16 +184,16 @@ To find help for any object in a line, put ? after it
 and press the tab key.  The cursor must be somewhere in the identifier
 with the question mark after it.   For source code, put ?? after
 the identifier and press tab.  You can also put an identifier by
-itself on a line with ? (or ??) after it and press shift-enter. 
+itself on a line with ? (or ??) after it and press shift-enter.
 
 To get extensive help on an object, type "help(object)" and press
 return.  This works, since I set the PAGER to "cat", and I strip out
 control codes that appear in the output.  And this isn't annoying,
 since web browsers are very good for scrolling through long output.
- 
- 
+
+
 \subsubsection{Saving and Loading Individual Objects}
-When you start a notebook you give a name argument
+When you start an online lab you give a name argument
 to it, and it creates a directory.  Inside that directory there
 will be many worksheets (which you can use all at once and easily
 flip through -- not implemented yet), and an object store.
@@ -207,7 +207,7 @@ and you'll see the "a" appear there.   You can load and save objects
 from any worksheet in any other one.  (Currently the only way to delete
 objects from the list of saved objects is to remove the object from
 the objects subdirectory.)
- 
+
 \subsubsection{Pasting in Examples}
 Code is evaluated by exec'ing (after preparsing). Only the output
 of the last line of the cell is implicitly printed. If any line
@@ -218,12 +218,12 @@ from the docs without any editing, and you can write input
 cells that contains non-evaluated plain text mixed with
 examples by starting the block with ">>>" or including an example.
 (NOTE: Lines beginning with ">>>" are still preparsed.)
- 
+
 \subsubsection{Saving and Loading Notebooks and Worksheets}
- 
-The FEMhub notebook is very persistent.  Every time you submit
-a cell for computation, the state of the notebook is saved (a
-few kb's file).  If you quit the notebook and reload, it will
+
+The FEMhub online lab is very persistent.  Every time you submit
+a cell for computation, the state of the online lab is saved (a
+few kb's file).  If you quit the online lab and reload, it will
 have everything you typed from the previous session, along
 with all output.
 Firefox has an excellent undo function for text input cells.
@@ -233,17 +233,17 @@ you've entered in that particular cell.
 You can save all variables in a current session using the
 \code{save_session} command, and you can then load those session
 variables using the \code{load_session} command.
- 
+
 \subsubsection{Architecture}
- 
+
 The FEMhub Notebook is an ``AJAX application'' that can run either
 entirely locally on your desktop machine, or partly on
 a server and via a web browser that could be located somewhere
 else.
 If you run the server and allow remote access (by setting
-address when starting the notebook), you should also set
+address when starting the online lab), you should also set
 the username and password, so not just anybody can access
-the notebook.
+the lab.
 
 Anywhere, here are the components of the FEMhub Notebook:
 
@@ -255,22 +255,22 @@ Anywhere, here are the components of the FEMhub Notebook:
      e.g., organizing computation of cells, etc.  It
      only imports a small
      subset of the FEMhub library.  In particular, if you do
-     "femhub -notebook" at the command line, only some of 
-     FEMhub is imported.  
- 
+     "femhub -notebook" at the command line, only some of
+     FEMhub is imported.
+
  \item FEMhub Server:
      A Python process with all the FEMhub libraries loaded; this
      is started by (1) when a web browser first requests that
      a cell be evaluated.  There's (up to) one of these
      for each worksheet.
- 
+
  \item WEB Browser: The web browser runs a 1000-line javascript (plus
      800 lines of css) program that Alex, Tom and I wrote from
      scratch, which implements much of the browser-side part of the
-     FEMhub notebook functionality.
-     
+     FEMhub online lab functionality.
+
 \end{enumerate}
- 
+
 When you use the FEMhub Notebook, you are mainly interacting with a
 javascript program.  When you do something serious, e.g., request
 computation of some input, create a new cell, etc., a request is made
@@ -291,13 +291,13 @@ for i in range(10):
     print i
     time.sleep(0.5)
 \end{verbatim}
- 
+
 You get to watch as the integers from 1 to 10 are "computed".
 Actually, getting this output to be reported as the computation
 proceeds is, I think, \emph{crucial} to making a really usable FEMhub
 GUI--users (i.e., me) want to run huge computations and watch the
 output progress.
- 
+
 The architecture is also good from the point of view of being able to
 interrupt running computations.  What happens when you request an
 interrupt is that the web browser sends a message to the web server,
@@ -321,7 +321,7 @@ the "save" command), and get back to where you were quickly.
 
 ## This is commented out, since it's not recommended.  I really
 ## don't like crap that is both potentially insecure and will
-## break on some setups. 
+## break on some setups.
 ## \subsubsection{Typesetting with Latex}
 ## If you have latex, gv, and the imagemagick programs (e.g., convert)
 ## installed on your system, you can do nice latex typesetting from
@@ -334,11 +334,11 @@ the "save" command), and get back to where you were quickly.
 ## \item If you preface a block with \code{\%latex} the rest of the
 ## block is typeset and the corresponding image appears.
 ## The input is also (mostly) hidden.  Use {\%latex_debug} to debug
-## latex problems. 
+## latex problems.
 ## \item If you preface a block with \code{\%slide} the rest of the
 ## block is typeset as a slide (bigger san serif font)
 ## and the corresponding image appears.  The input is again hidden.
-## Use {\%slide_debug} for debugging. 
+## Use {\%slide_debug} for debugging.
 ## \end{enumerate}
 
 
@@ -348,7 +348,7 @@ the "save" command), and get back to where you were quickly.
 
 notebook_help = [
     ('Find Help and Documentation',
-     [('<b>Get Started with FEMhub Web Notebook</b>', 'The best way is to try out simple worksheets that explain elementary methods of numerical analysis.<br><br><b>Step 1:</b> Go to <a href="http://nb.femhub.org/">http://nb.femhub.org/</a> and create an account. This is automatic and fast. Report any problems to femhub@googlegroups.com.<br><br><b>Step 2:</b> Log into the web notebook. Click on "published worksheets". Then click on any link starting with "Num Methods", the simplest one being "Num Methods: Taylor Polynomial".<br><br><b>Step 3:</b> Click on "Edit a Copy" in the upper left corner and wait for the browser response. Scroll down below the first input window and click "Evaluate". This will load the program. Then there are two input windows with two different ways to plot a Taylor polynomial that are self-explanatory.<br><br><b>Step 4:</b> There are multiple other worksheets whose title begins with "Num Methods:". Try them out and give us your feedback!<br><br><b>Step 5:</b> You can try out worksheets starting with "Hermes2D:" that allow you to solve finite element problems via the internet. Feel free to adjust the existing worksheets to fit your own needs. We are working on expanding the possibilities.'),
+     [('<b>Get Started with FEMhub Online Lab</b>', 'The best way is to try out simple worksheets that explain elementary methods of numerical analysis.<br><br><b>Step 1:</b> Go to <a href="http://nb.femhub.org/">http://nb.femhub.org/</a> and create an account. This is automatic and fast. Report any problems to femhub@googlegroups.com.<br><br><b>Step 2:</b> Log into the online lab. Click on "published worksheets". Then click on any link starting with "Num Methods", the simplest one being "Num Methods: Taylor Polynomial".<br><br><b>Step 3:</b> Click on "Edit a Copy" in the upper left corner and wait for the browser response. Scroll down below the first input window and click "Evaluate". This will load the program. Then there are two input windows with two different ways to plot a Taylor polynomial that are self-explanatory.<br><br><b>Step 4:</b> There are multiple other worksheets whose title begins with "Num Methods:". Try them out and give us your feedback!<br><br><b>Step 5:</b> You can try out worksheets starting with "Hermes2D:" that allow you to solve finite element problems via the internet. Feel free to adjust the existing worksheets to fit your own needs. We are working on expanding the possibilities.'),
       ('Help About',
        'Type ? immediately after the object or function and press tab.'),
       ('Source Code',
@@ -356,7 +356,7 @@ notebook_help = [
       ('Full Text Search of Docs and Source',
        'Search the FEMHUB documentation by typing <pre>search_doc("my query")</pre> in an input cell and press shift-enter.  Search the source code of FEMHUB by typing <pre>search_src("my query")</pre> and pressing shift-enter.  Arbitrary regular expressions are allowed as queries.'),
       # ('More Help',
-      #  'Type "help(sagenb.notebook.notebook)" for a detailed discussion of the architecture of the FEMHUB notebook and a tutorial (or see the FEMHUB reference manual).'),
+      #  'Type "help(sagenb.notebook.notebook)" for a detailed discussion of the architecture of the FEMHUB online lab and a tutorial (or see the FEMHUB reference manual).'),
       ]),
     ('Key and Mouse Bindings',
      [('Evaluate Input',
@@ -403,7 +403,7 @@ notebook_help = [
      [('Input Rules',
        "Code is evaluated by exec'ing (after preparsing).  Only the output of the last line of the cell is implicitly printed.  If any line starts with \"femhub:\" or \">>>\" the entire block is assumed to contain text and examples, so only lines that begin with a prompt are executed.   Thus you can paste in complete examples from the docs without any editing, and you can write input cells that contains non-evaluated plain text mixed with examples by starting the block with \">>>\" or including an example."),
       ('History',
-       'Click <a href="/history">log</a> commands you have entered in any worksheet of this notebook.'),
+       'Click <a href="/history">log</a> commands you have entered in any worksheet of this online lab.'),
       ('Typesetting All Output',
        'Type pretty_print_default() in an input cell and press shift-enter.  All future output will be typeset automatically.'),
       # ('Javascript Debugger',
@@ -411,13 +411,13 @@ notebook_help = [
     ]),
     ('Files and Scripts',
      [('Loading FEMHUB/Python Scripts',
-       'Use "load filename.femhub" and "load filename.py".  Load is relative to the path you started the notebook in.  The .femhub files are preparsed and .py files are not.   You may omit the .femhub or .py extension.  Files may load other files.'),
+       'Use "load filename.femhub" and "load filename.py".  Load is relative to the path you started the online lab in.  The .femhub files are preparsed and .py files are not.   You may omit the .femhub or .py extension.  Files may load other files.'),
       ('Attaching Scripts',
        'Use "attach filename.femhub" or "attach filename.py".  Attached files are automatically reloaded when the file changes.  The file $HOME/.femhub/init.femhub is attached on startup if it exists.'),
       ('Working Directory',
        'Each block of code is run from its own directory.  If any images are created as a side effect, they will automatically be displayed.'),
       ('DIR Variable',
-       'The variable DIR contains the directory from which you started the FEMHUB notebook.  For example, to open a file in that directory, do "open(DIR+\'filename\')".'),
+       'The variable DIR contains the directory from which you started the FEMHUB online lab.  For example, to open a file in that directory, do "open(DIR+\'filename\')".'),
       ('DATA Variable',
        'The variable DATA contains the directory with data files that you upload into the worksheet.  For example, to open a file in that directory, do "open(DATA+\'filename\')".'),
       ('Loading and Saving Objects',
@@ -425,6 +425,6 @@ notebook_help = [
       ('Loading and Saving Sessions',
        'Use "save_session(\'name\')" to save all variables to an object.  Use "load_session(\'name\')" to <i>merge</i> in all variables from a saved session.'),
       ('Customizing the Notebook CSS',
-       'If you create a file <tt>$HOME/.sage/notebook.css</tt> then it will get applied when rendering the notebook.   See ')
+       'If you create a file <tt>$HOME/.sage/notebook.css</tt> then it will get applied when rendering the online lab.   See ')
     ])
     ]
